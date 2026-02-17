@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String    @unique
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  bookings  Booking[]
+  accounts  Account[]
+  sessions  Session[]
+}
+
+model Resource {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+
+  bookings  Booking[]
+}
+
+model Booking {
+  id         String    @id @default(cuid())
+  userId     String
+  resourceId String
+  date       DateTime
+  createdAt  DateTime  @default(now())
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource   Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, date])
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                String @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         Int?
+
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
