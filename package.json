@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "migrate:dev": "powershell -Command \"$env:DATABASE_URL=$env:DATABASE_URL_UNPOOLED; npx prisma migrate dev\"",
-    "migrate:deploy": "powershell -Command \"$env:DATABASE_URL=$env:DATABASE_URL_UNPOOLED; npx prisma migrate deploy\""
+    "migrate:deploy": "powershell -Command \"$env:DATABASE_URL=$env:DATABASE_URL_UNPOOLED; npx prisma migrate deploy\"",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.5.0-beta.9",

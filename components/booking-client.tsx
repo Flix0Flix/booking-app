@@ -90,7 +90,7 @@ export default function BookingClient(props: {
               <div key={b.id} className="flex items-center justify-between rounded border p-3">
                 <div>
                   <div className="font-medium">{b.resourceName}</div>
-                  <div className="text-sm opacity-70">{formatDate(b.date)}</div>
+                  <div className="text-sm opacity-70">{b.date}</div>
                 </div>
                 <button className="rounded border px-3 py-1 text-sm" onClick={() => cancel(b.id)} disabled={isPending}>
                   Avboka
