@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate:dev": "powershell -Command \"$env:DATABASE_URL=$env:DATABASE_URL_UNPOOLED; npx prisma migrate dev\"",
+    "migrate:deploy": "powershell -Command \"$env:DATABASE_URL=$env:DATABASE_URL_UNPOOLED; npx prisma migrate deploy\""
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.5.0-beta.9",

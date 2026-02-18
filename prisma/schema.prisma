@@ -13,6 +13,7 @@ datasource db {
   provider = "postgresql"
 }
 
+
 model User {
   id            String    @id
   name          String
@@ -23,6 +24,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  bookings      Booking[]
 
   @@unique([email])
   @@map("user")
@@ -74,4 +76,29 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Resource {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+
+  bookings  Booking[]
+  @@map("resource")
+}
+
+model Booking {
+  id         String   @id @default(cuid())
+  userId     String
+  resourceId String
+  date       DateTime
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, date])
+  @@index([userId])
+  @@index([resourceId])
+  @@map("booking")
 }
